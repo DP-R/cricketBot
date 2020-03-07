@@ -15,40 +15,15 @@ ap.add_argument("-v", "--video",
 ap.add_argument("-b", "--buffer", type=int, default=64,
                 help="max buffer size")
 args = vars(ap.parse_args())
-#ballColors
+#ballColors in BGR format instead of RGB
 ballLowerColor = (140, 100, 140)
 ballUpperColor = (230, 230, 230)
 pts = deque(maxlen=args["buffer"])
-
-# # while True:
-
-#     # Use urllib to get the image and convert into a cv2 usable format
-#     imgResp = urllib.request.urlopen(url)
-#     imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
-#     img = cv2.imdecode(imgNp, -1)
-#     print(img)
-#     gray = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
-#     # put the image on screen
-#     # cv2.imshow('IPWebcam', img)
-#     cv2.imshow('frame', gray)
-#     #To give the processor some less stress
-#     #time.sleep(0.1)
-
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
 
 while True:
     imgResp = urllib.request.urlopen(url)
     imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
     frame = cv2.imdecode(imgNp, -1)
-# grab the current frame
-    # frame = vs.read()
-# handle the frame from VideoCapture or VideoStream
-# frame = frame[1] if args.get(l, False) else frame
-# if we are viewing a video and we did not grab a frame,
-# then we have reached the end of the video
-# if frame is None:
-    # break
 # resize the frame, blur it, and convert it to the HSV
 # color space
     frame = imutils.resize(frame, width=600)
@@ -60,8 +35,6 @@ while True:
     mask = cv2.inRange(hsv, ballLowerColor, ballUpperColor)
     mask = cv2.erode(mask, None, iterations=2)
     mask = cv2.dilate(mask, None, iterations=2)
-
-
 # find contours in the mask and initialize the current
 # (x, y) center of the ball
     cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
